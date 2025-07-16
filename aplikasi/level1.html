@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="jv">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nero Basa Jawa - Level</title>
+    <style>
+        :root {
+            --bg-color: #E6F2D5;
+            --text-color: #333;
+            --container-bg: #fff;
+            --primary: #58CC02;
+            --primary-hover: #44a700;
+            --feedback-correct: green;
+            --feedback-incorrect: red;
+            --blockquote-bg: #f0f9e8;
+            --border-color: #ccc;
+            --btn-back-bg: #ccc;
+            --btn-back-hover: #aaa;
+        }
+
+        body.dark {
+            --bg-color: #1a1a1a;
+            --text-color: #eee;
+            --container-bg: #2a2a2a;
+            --primary: #58CC02;
+            --primary-hover: #44a700;
+            --feedback-correct: #8bc34a;
+            --feedback-incorrect: #e57373;
+            --blockquote-bg: #3a3a3a;
+            --border-color: #555;
+            --btn-back-bg: #555;
+            --btn-back-hover: #777;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            transition: background 0.4s, color 0.4s;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, #b2f7ef, #58CC02, transparent 70%);
+            animation: gradient 10s ease infinite alternate;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        @keyframes gradient {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(50%, 50%);
+            }
+        }
+
+        .container {
+            background: var(--container-bg);
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 2rem;
+            text-align: center;
+            box-sizing: border-box;
+            transition: background 0.4s;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .progress {
+            height: 8px;
+            background: #ddd;
+            border-radius: 50px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.4s;
+        }
+
+        blockquote {
+            font-style: italic;
+            background-color: var(--blockquote-bg);
+            padding: 1rem 1.5rem;
+            border-left: 6px solid var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            transition: background-color 0.4s;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            font-size: 1.1rem;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            box-sizing: border-box;
+            transition: border-color 0.4s;
+        }
+
+        .btn,
+        .btn-back,
+        .mode-toggle {
+            display: inline-block;
+            font-weight: 700;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        .btn-back {
+            background-color: var(--btn-back-bg);
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background-color: var(--btn-back-hover);
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.4s, transform 0.4s;
+        }
+
+        .feedback.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .correct {
+            color: var(--feedback-correct);
+        }
+
+        .incorrect {
+            color: var(--feedback-incorrect);
+        }
+
+        .answer-key {
+            margin-top: 1rem;
+            font-style: italic;
+            color: #777;
+        }
+
+        .score-section {
+            margin-top: 2rem;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .leaderboard {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s;
+        }
+
+        /* Container bar tombol NAV (flex!) */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .btn-home,
+        .mode-toggle {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.5rem 1.2rem;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            background: var(--container-bg);
+            color: var(--text-color);
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            transition: background 0.3s, transform 0.3s, color 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            animation: fadeSlide 0.8s forwards;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-home:hover,
+        .mode-toggle:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="level.html" class="btn-home">🏠 Home</a>
+        <button class="mode-toggle" onclick="toggleMode()">🌙 Mode Malam</button>
+    </div>
+
+
+    <div class="container fade-in" id="container">
+        <h1>Nero Basa Jawa 🐈‍⬛</h1>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div id="gameArea">
+            <p>Latihan Basa Jawa:</p>
+            <blockquote id="question">Ngenteni...</blockquote>
+            <input type="text" id="answerInput" placeholder="Tulis jawabanmu..." />
+            <button class="btn" onclick="submitAnswer()">Kirim</button>
+            <div id="feedback" class="feedback"></div>
+            <div id="answerKey" class="answer-key"></div>
+            <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display:none;">Soal Sabanjure</button>
+        </div>
+        <div id="scoreArea" style="display:none;">
+            <div class="score-section" id="scoreResult"></div>
+            <div class="leaderboard" id="highScore"></div>
+            <button class="btn" onclick="restartGame()">🔁 Main Ulang</button>
+            <button id="nextLevelBtn" class="btn" style="display:none;" onclick="nextLevel()">➡️ Level
+                Sabanjure</button>
+            <a href="level.html" class="btn-back">🚀 Kembali Pilih Level</a>
+        </div>
+    </div>
+
+    <audio id="soundCorrect" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
+    <audio id="soundWrong"
+        src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <script>
+        const allQuestions = [
+            { source: "Apa kabar?", target: ["Piye kabarmu?", "Kepiye kabarmu?"] },
+            { source: "Selamat pagi.", target: ["Sugeng enjing"] },
+            { source: "Terima kasih.", target: ["Matur nuwun"] },
+            { source: "Saya lapar.", target: ["Aku luwe"] },
+            { source: "Nama saya Budi.", target: ["Jenengku Budi"] },
+            { source: "Hati-hati di jalan.", target: ["Ati-ati neng dalan"] },
+            { source: "Dia sedang tidur.", target: ["Dheweke lagi turu"] },
+            { source: "Saya tidak tahu.", target: ["Aku ora ngerti"] },
+            { source: "Sampai jumpa lagi.", target: ["Mugi pinanggih malih"] },
+            { source: "Mau ke mana?", target: ["Arep menyang endi?"] }
+        ];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentLevel = parseInt(urlParams.get('level')) || 1;
+
+        let questions = [];
+        let currentIndex = 0;
+        let score = 0;
+
+        const questionEl = document.getElementById("question");
+        const answerInput = document.getElementById("answerInput");
+        const feedbackEl = document.getElementById("feedback");
+        const answerKeyEl = document.getElementById("answerKey");
+        const nextBtn = document.getElementById("nextBtn");
+        const gameArea = document.getElementById("gameArea");
+        const scoreArea = document.getElementById("scoreArea");
+        const scoreResult = document.getElementById("scoreResult");
+        const highScoreEl = document.getElementById("highScore");
+        const container = document.getElementById("container");
+        const progressBar = document.getElementById("progressBar");
+
+        const soundCorrect = document.getElementById("soundCorrect");
+        const soundWrong = document.getElementById("soundWrong");
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function startGame() {
+            questions = shuffle([...allQuestions]);
+            currentIndex = 0;
+            score = 0;
+            scoreArea.style.display = "none";
+            gameArea.style.display = "block";
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentIndex];
+            questionEl.textContent = q.source;
+            answerInput.value = "";
+            feedbackEl.textContent = "";
+            feedbackEl.className = "feedback";
+            answerKeyEl.textContent = "";
+            nextBtn.style.display = "none";
+            answerInput.focus();
+            container.classList.remove("fade-in");
+            void container.offsetWidth;
+            container.classList.add("fade-in");
+
+            const progress = ((currentIndex) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function submitAnswer() {
+            const q = questions[currentIndex];
+            const userAns = answerInput.value.trim().toLowerCase();
+            const correctAnswers = q.target.map(a => a.toLowerCase());
+
+            if (correctAnswers.includes(userAns)) {
+                feedbackEl.textContent = "✅ Bener!";
+                feedbackEl.classList.add("correct");
+                score++;
+                soundCorrect.play();
+            } else {
+                feedbackEl.textContent = "❌ Salah.";
+                feedbackEl.classList.add("incorrect");
+                soundWrong.play();
+            }
+
+            feedbackEl.classList.add("show");
+            answerKeyEl.textContent = "Jawaban bener: " + q.target.join(" / ");
+            nextBtn.style.display = "inline-block";
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                showQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            gameArea.style.display = "none";
+            scoreArea.style.display = "block";
+            scoreResult.textContent = `Skormu: ${score} saka ${questions.length}`;
+            progressBar.style.width = `100%`;
+            confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
+
+            let highScore = parseInt(localStorage.getItem('highScoreJawa')) || 0;
+            if (score > highScore) {
+                localStorage.setItem('highScoreJawa', score);
+                highScore = score;
+            }
+            highScoreEl.textContent = `🏆 Rekor paling apik: ${highScore} saka ${questions.length}`;
+
+            // Muncul tombol next level jika skor >= 10
+            if (score >= 2) {
+                let maxUnlocked = parseInt(localStorage.getItem('maxUnlocked')) || 1;
+                if (currentLevel >= maxUnlocked) {
+                    localStorage.setItem('maxUnlocked', currentLevel + 1);
+                }
+                document.getElementById("nextLevelBtn").style.display = "inline-block";
+            }
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        function nextLevel() {
+            window.location.href = "test.html"; // Ganti ke tujuanmu
+        }
+
+
+        function toggleMode() {
+            const isDark = document.body.classList.toggle('dark');
+            localStorage.setItem('modeJawa', isDark ? 'dark' : 'light');
+            document.querySelector('.mode-toggle').textContent = isDark ? '☀️ Mode siang' : '🌙 Mode malam';
+        }
+
+        const savedMode = localStorage.getItem('modeJawa');
+        if (savedMode === 'dark') {
+            document.body.classList.add('dark');
+            document.querySelector('.mode-toggle').textContent = '☀️ Mode siang';
+        }
+
+        startGame();
+    </script>
+</body>
+
+</html>

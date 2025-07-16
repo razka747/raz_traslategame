@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Level 2</title>
+</head>
+
+<body style="font-family: Arial; text-align: center; padding: 50px;">
+    <h1>🔥 LEVEL 2</h1>
+    <p>Selamat datang di Level 2!</p>
+    <button onclick="completeLevel()">✅ Complete Level</button>
+    <br /><br />
+    <button onclick="nextLevel()">➡️ Next Level</button>
+    <br /><br />
+    <a href="pilih-level.html">⬅️ Kembali ke Levels</a>
+
+    <script>
+        const currentLevel = 2;
+
+        function completeLevel() {
+            let maxUnlocked = parseInt(localStorage.getItem('maxUnlocked')) || 1;
+            if (currentLevel >= maxUnlocked) {
+                localStorage.setItem('maxUnlocked', currentLevel + 1);
+                alert(`Level ${currentLevel} selesai! Level ${currentLevel + 1} terbuka!`);
+            } else {
+                alert('Level ini sudah selesai.');
+            }
+        }
+
+        function nextLevel() {
+            window.location.href = `level${currentLevel + 1}.html`;
+        }
+    </script>
+</body>
+
+</html>

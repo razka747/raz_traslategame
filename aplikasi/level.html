@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Level System with Save Progress</title>
+    <style>
+        :root {
+            --bg-light: #e0f7fa;
+            --bg-dark: #121212;
+            --glass-light: rgba(255, 255, 255, 0.2);
+            --glass-dark: rgba(0, 0, 0, 0.3);
+            --text-light: #111;
+            --text-dark: #f0f0f0;
+            --unlocked: #00e676;
+            --completed: #2979ff;
+            --locked: #777;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: 'Segoe UI', sans-serif;
+            color: var(--text-light);
+            transition: background 0.6s, color 0.6s;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        body.dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(-45deg, #00bcd4, #3f51b5, #00bcd4, #3f51b5);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            z-index: -2;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .glass {
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            background: var(--glass-light);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: background 0.6s;
+        }
+
+        body.dark .glass {
+            background: var(--glass-dark);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .levels {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .level {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+        }
+
+        .level:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .unlocked {
+            background: var(--unlocked);
+            color: white;
+        }
+
+        .completed {
+            background: var(--completed);
+            color: white;
+        }
+
+        .locked {
+            background: var(--locked);
+            color: white;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        .buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .buttons button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            color: inherit;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .buttons button:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px);
+        }
+
+        body.dark .buttons button {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark .buttons button:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background"></div>
+
+    <div class="glass">
+        <h2>🚀 Level</h2>
+        <div class="levels" id="levels"></div>
+        <div class="buttons">
+            <button onclick="toggleMode()">🌙/☀️ Mode</button>
+            <button onclick="goHome()">🏠 Home</button>
+        </div>
+    </div>
+
+    <script>
+        const totalLevels = 10;
+        let completed = parseInt(localStorage.getItem('completedLevels')) || 0;
+
+        const levelsContainer = document.getElementById('levels');
+
+        function renderLevels() {
+            levelsContainer.innerHTML = '';
+            for (let i = 1; i <= totalLevels; i++) {
+                const level = document.createElement('a');
+                level.classList.add('level');
+                level.href = i <= completed + 1 ? `level${1}.html` : '#';
+
+                if (i <= completed) {
+                    level.classList.add('completed');
+                } else if (i === completed + 1) {
+                    level.classList.add('unlocked');
+                } else {
+                    level.classList.add('locked');
+                }
+
+                level.textContent = i;
+                levelsContainer.appendChild(level);
+            }
+        }
+
+        function toggleMode() {
+            document.body.classList.toggle('dark');
+        }
+
+        function goHome() {
+            window.location.href = 'home.html'; 
+        }
+
+        renderLevels();
+    </script>
+</body>
+
+</html>

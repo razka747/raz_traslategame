@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nero</title>
+    <style>
+        :root {
+            --bg: #f7f7f7;
+            --bg-back: radial-gradient(circle at 20% 30%, #BBDEFB 0%, transparent 70%);
+            --text: #000;
+            --header-bg: #fff;
+            --navbar-bg: #fff;
+            --navbar-text: #555;
+        }
+
+        body.dark {
+            --bg: #121212;
+            --bg-back: radial-gradient(circle at 20% 30%, #0D47A1 0%, transparent 70%);
+            --text: #fff;
+            --header-bg: #1e1e1e;
+            --navbar-bg: #1e1e1e;
+            --navbar-text: #ccc;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: var(--bg-back);
+            animation: moveBg 30s ease-in-out infinite alternate;
+            z-index: -1;
+        }
+
+        @keyframes moveBg {
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+
+            50% {
+                transform: scale(1.2) translate(-5%, -5%);
+            }
+
+            100% {
+                transform: scale(1) translate(0, 0);
+            }
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--header-bg);
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        header.fadeIn {
+            animation: fadeInDown 0.6s ease forwards;
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        header input[type="text"] {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        header button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .content {
+            height: calc(100vh - 120px);
+            overflow: hidden;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 15px;
+            background: #4CAF50;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .card.orange {
+            background: #FF9800;
+        }
+
+        .card.blue {
+            background: #2196F3;
+        }
+
+        .card h2 {
+            margin: 0 0 10px;
+            font-size: 16px;
+        }
+
+        .card p {
+            margin: 0 0 10px;
+            font-size: 14px;
+        }
+
+        .card a.button {
+            display: inline-block;
+            background: white;
+            color: #333;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            background: var(--navbar-bg);
+            border-top: 1px solid #ddd;
+            padding: 8px 0;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .navbar.fadeIn {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .navbar a {
+            text-align: center;
+            font-size: 14px;
+            text-decoration: none;
+            color: var(--navbar-text);
+        }
+
+        .navbar a:hover {
+            color: #1cb0f6;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 16px;
+            }
+
+            .navbar a {
+                font-size: 12px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header">
+        <h1>Nero 🐈‍⬛</h1>
+        <div>
+            <input type="text" id="searchInput" placeholder="Cari...">
+            <button id="toggleMode">🌙</button>
+        </div>
+    </header>
+
+    <div class="content">
+        <div class="card" data-card="1">
+            <h2>🌐 Fitur Translate</h2>
+            <p class="time">Belum pernah dimainkan</p>
+            <a href="translate.html" class="button">MAIN</a>
+        </div>
+        <div class="card orange" data-card="2">
+            <h2>🐈‍⬛ Game Nero</h2>
+            <p class="time">Belum pernah dimainkan</p>
+            <a href="level.html" class="button">MAIN</a>
+        </div>
+        <div class="card blue" data-card="3">
+            <h2> 📖 Kamus Bahasa Jawa</h2>
+            <p class="time">Belum pernah dimainkan</p>
+            <a href="openai.html" class="button">MAIN</a>
+        </div>
+    </div>
+
+    <div class="navbar" id="navbar">
+        <a href="home.html">🏠<br>Home</a>
+        <a href="#">🔔<br>Notif</a>
+        <a href="#">👥<br>Belajar</a>
+        <a href="#">🛍️<br>Toko</a>
+    </div>
+
+    <script>
+        // Animasi header, cards, dan navbar saat load
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('header').classList.add('fadeIn');
+            document.getElementById('navbar').classList.add('fadeIn');
+
+            document.querySelectorAll('.card').forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('animate');
+                }, index * 200);
+            });
+        });
+
+        // Tombol mode gelap/cerah
+        const toggleModeBtn = document.getElementById('toggleMode');
+        const body = document.body;
+        function setMode(mode) {
+            if (mode === 'dark') {
+                body.classList.add('dark');
+                toggleModeBtn.textContent = '☀️';
+            } else {
+                body.classList.remove('dark');
+                toggleModeBtn.textContent = '🌙';
+            }
+            localStorage.setItem('mode', mode);
+        }
+        toggleModeBtn.addEventListener('click', () => {
+            setMode(body.classList.contains('dark') ? 'light' : 'dark');
+        });
+        setMode(localStorage.getItem('mode') || 'light');
+
+        // Waktu terakhir dimainkan
+        const mainButtons = document.querySelectorAll('.card a.button');
+        mainButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const card = btn.closest('.card');
+                const cardId = card.dataset.card;
+                localStorage.setItem(`cardTime_${cardId}`, Date.now());
+            });
+        });
+
+        function updateTime(card) {
+            const cardId = card.dataset.card;
+            const savedTime = localStorage.getItem(`cardTime_${cardId}`);
+            const timeP = card.querySelector('.time');
+            if (savedTime) {
+                const diffMs = Date.now() - parseInt(savedTime);
+                const diffMins = Math.floor(diffMs / (1000 * 60));
+                const diffHrs = Math.floor(diffMins / 60);
+                const diffDays = Math.floor(diffHrs / 24);
+                if (diffDays >= 1) {
+                    timeP.textContent = `${diffDays} hari yang lalu`;
+                } else if (diffHrs >= 1) {
+                    timeP.textContent = `${diffHrs} jam yang lalu`;
+                } else {
+                    timeP.textContent = `${diffMins} menit yang lalu`;
+                }
+            } else {
+                timeP.textContent = `Belum pernah dimainkan`;
+            }
+        }
+
+        document.querySelectorAll('.card').forEach(updateTime);
+
+        // Fitur search
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const query = this.value.toLowerCase();
+            document.querySelectorAll('.card').forEach(card => {
+                const title = card.querySelector('h2').textContent.toLowerCase();
+                card.style.display = title.includes(query) ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+
+</html>

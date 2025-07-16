@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auto Translator</title>
+    <style>
+        :root {
+            --bg: linear-gradient(-45deg, #2C3E50, #4CA1AF, #2C3E50, #4CA1AF);
+            --text: #222;
+            --card: rgba(255, 255, 255, 0.05);
+            --accent: #4CAF50;
+        }
+
+        body.dark {
+            --bg: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #203a43);
+            --text: #f2f2f2;
+            --card: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background: var(--bg);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            color: var(--text);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.4s ease, background 0.4s ease;
+            animation: fadeScale 0.7s ease forwards;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        @keyframes fadeScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        h2 {
+            margin-top: 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            resize: none;
+            box-sizing: border-box;
+        }
+
+        select,
+        button {
+            padding: 10px 18px;
+            font-size: 16px;
+            margin: 5px 5px 5px 0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        select:focus,
+        button:focus {
+            outline: none;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            min-height: 60px;
+            transition: background 0.4s ease;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+            color: #fff;
+        }
+
+        .toggle-mode {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid var(--text);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s, border 0.3s;
+            z-index: 10;
+        }
+
+        .toggle-mode:hover {
+            transform: rotate(20deg);
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .back-button:hover {
+            background: #43a047;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            textarea {
+                height: 100px;
+            }
+
+            select,
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            .toggle-mode {
+                top: 15px;
+                right: 15px;
+            }
+
+            .back-button {
+                display: block;
+                width: auto;
+                font-size: 14px;
+                padding: 8px 16px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <button class="toggle-mode">🌙</button>
+    <div class="container">
+        <h2>🌐 Auto Translator</h2>
+        <textarea id="inputText" placeholder="Masukkan teks..."></textarea>
+        <div>
+            <select id="language">
+                <option value="en">Inggris</option>
+                <option value="id">Indonesia</option>
+                <option value="es">Spanyol</option>
+                <option value="jw">Jawa</option> <!-- ✅ Tambahan Bahasa Jawa -->
+            </select>
+            <button onclick="speak()">🔊 Dengarkan</button>
+        </div>
+        <div class="output" id="outputText">Hasil terjemahan akan muncul di sini...</div>
+        <div id="loader" style="display:none;" class="loader"></div>
+
+        <!-- Tombol Kembali -->
+        <a href="home.html" class="back-button">🏠 Kembali ke Home</a>
+    </div>
+
+    <script>
+        const toggleBtn = document.querySelector('.toggle-mode');
+        toggleBtn.onclick = () => {
+            document.body.classList.toggle('dark');
+            toggleBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+        };
+
+        const input = document.getElementById('inputText');
+        const output = document.getElementById('outputText');
+        const lang = document.getElementById('language');
+        const loader = document.getElementById('loader');
+
+        let debounce;
+
+        input.addEventListener('input', () => {
+            clearTimeout(debounce);
+            debounce = setTimeout(() => {
+                if (input.value.trim() !== '') {
+                    translateText(input.value.trim(), lang.value);
+                } else {
+                    output.textContent = 'Hasil terjemahan akan muncul di sini...';
+                }
+            }, 500);
+        });
+
+        lang.addEventListener('change', () => {
+            if (input.value.trim() !== '') {
+                translateText(input.value.trim(), lang.value);
+            }
+        });
+
+        async function translateText(text, targetLang) {
+            loader.style.display = 'inline-block';
+            output.textContent = '';
+            try {
+                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`);
+                const data = await res.json();
+                output.textContent = data[0][0][0];
+            } catch (error) {
+                output.textContent = 'Terjadi kesalahan.';
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        function speak() {
+            const utterance = new SpeechSynthesisUtterance(output.textContent);
+            utterance.lang = lang.value === 'jw' ? 'jv-ID' : lang.value; // Google TTS Jawa = jv-ID
+            speechSynthesis.speak(utterance);
+        }
+    </script>
+</body>
+
+</html>

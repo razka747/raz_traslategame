@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kamus Bahasa Jawa</title>
+    <style>
+        /* Tema CERAH (default) */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(-45deg, #3b82f6, #60a5fa, #06b6d4, #38bdf8);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            min-height: 100vh;
+            transition: background 0.5s, color 0.5s;
+            color: #111827;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Tema GELAP */
+        body.dark {
+            background: linear-gradient(-45deg, #0f172a, #1e3a8a, #1e40af, #3b82f6);
+            color: #f1f5f9;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transition: background 0.5s, color 0.5s;
+        }
+
+        .container.dark {
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #f1f5f9;
+            margin-bottom: 10px;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border-left: 5px solid #3b82f6;
+            transition: background 0.3s, transform 0.2s, color 0.5s;
+        }
+
+        li:hover {
+            background: #e0f2fe;
+            transform: translateX(5px);
+        }
+
+        li strong {
+            color: #1d4ed8;
+        }
+
+        .container.dark li {
+            background: #334155;
+            border-left-color: #38bdf8;
+        }
+
+        .container.dark li:hover {
+            background: #475569;
+        }
+
+        .container.dark li strong {
+            color: #38bdf8;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .back-btn,
+        .toggle-btn {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover,
+        .toggle-btn:hover {
+            background: #2563eb;
+        }
+
+        .container.dark .back-btn,
+        .container.dark .toggle-btn {
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        .container.dark .back-btn:hover,
+        .container.dark .toggle-btn:hover {
+            background: #0ea5e9;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="container">
+        <div class="buttons">
+            <a href="home.html" class="back-btn">⬅ Kembali</a>
+            <button class="toggle-btn" onclick="toggleMode()">🌙/☀️ Mode</button>
+        </div>
+        <h1>Kamus Bahasa Jawa</h1>
+        <ul id="wordList"></ul>
+    </div>
+
+    <script>
+        const dictionary = {
+            "makan": "nedha",
+            "minum": "ngombe",
+            "tidur": "turu",
+            "pergi": "lungo",
+            "datang": "rawuh",
+            "teman": "kanca",
+            "rumah": "omah",
+            "ayah": "bapak",
+            "ibu": "ibu",
+            "cantik": "ayu",
+            "jelek": "ala",
+            "belajar": "sinau",
+            "bermain": "dolanan",
+            "bicara": "ngomong",
+            "jalan": "mlaku",
+            "hujan": "udan",
+            "matahari": "srengenge",
+            "bulan": "wulan",
+            "bintang": "lintang",
+            "air": "banyu",
+            "api": "geni",
+            "tanah": "lemah",
+            "angin": "angin",
+            "gunung": "gunung",
+            "laut": "segoro",
+            "sungai": "kali",
+            "pohon": "wit",
+            "bunga": "kembang",
+            "buah": "woh",
+            "sayur": "sayur",
+            "garam": "uyah",
+            "gula": "gulo",
+            "pedas": "pedes",
+            "manis": "legit",
+            "pahit": "pait",
+            "asin": "asin",
+            "hitam": "ireng",
+            "putih": "putih",
+            "merah": "abang",
+            "biru": "biru",
+            "kuning": "kuning",
+            "hijau": "ijo",
+            "besar": "gedhe",
+            "kecil": "cilik",
+            "panjang": "dawa",
+            "pendek": "cendhak",
+            "cepat": "cepak",
+            "lambat": "alon",
+            "bahagia": "bungah",
+            "sedih": "susah"
+        };
+
+        function displayDictionary() {
+            const wordList = document.getElementById("wordList");
+            for (const [indonesia, jawa] of Object.entries(dictionary)) {
+                const li = document.createElement("li");
+                li.innerHTML = `<strong>${indonesia}</strong> → ${jawa}`;
+                wordList.appendChild(li);
+            }
+        }
+
+        function toggleMode() {
+            document.body.classList.toggle('dark');
+            document.getElementById('container').classList.toggle('dark');
+        }
+
+        displayDictionary();
+    </script>
+</body>
+
+</html>
